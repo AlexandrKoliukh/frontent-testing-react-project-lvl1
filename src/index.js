@@ -47,7 +47,7 @@ const loadResource = (loadedUrl, link, outputPath) => {
 
 export const saveResources = (loadedUrl, outputPath, page) => {
   const relativeLinks = extractSourceLinks(page);
-
+  console.log('Relative links: ', relativeLinks);
   const resultDirName = getNameFromLink(loadedUrl, 'directory');
   const resultOutput = path.join(outputPath, resultDirName);
   return fs
@@ -57,6 +57,7 @@ export const saveResources = (loadedUrl, outputPath, page) => {
       return relativeLinks.map((link) => {
         const { protocol } = new URL(loadedUrl);
         const resourceUrl = protocol + link;
+        console.log('resourceUrl', resourceUrl);
         return loadResource(resourceUrl, link, resultOutput);
       });
     })

@@ -56,8 +56,8 @@ describe('load-page', () => {
       .get(/index.css/)
       .reply(200, responseBodyCss)
       .get(/img.png/)
-      .reply(200, responseBodyImg)
-      .persist();
+      .reply(200, responseBodyImg);
+
     await savePage(testLink, pathToTempDir);
     const completedPath = path.join(pathToTempDir, getNameFromLink(testLink));
     const loadedData = await fs.readFile(completedPath, 'utf-8');
