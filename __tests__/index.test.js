@@ -6,8 +6,6 @@ import { getNameFromLink } from '../src/utils';
 import savePage from '../src';
 import parse from '../src/parser';
 
-nock.disableNetConnect();
-
 const getFixturePath = (fileName) =>
   path.join(__dirname, '..', '__fixtures__', fileName);
 
@@ -19,6 +17,7 @@ describe('load-page', () => {
   let pathToTempDir;
 
   beforeAll(async () => {
+    nock.disableNetConnect();
     pathToTempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'test-'));
   });
 
@@ -57,8 +56,8 @@ describe('load-page', () => {
       .get(/index.css/)
       .reply(200, responseBodyCss)
       .get(/img.png/)
-      .reply(200, responseBodyImg);
-
+      .reply(200, responseBodyImg)
+      .persist();
     await savePage(testLink, pathToTempDir);
     const completedPath = path.join(pathToTempDir, getNameFromLink(testLink));
     const loadedData = await fs.readFile(completedPath, 'utf-8');
