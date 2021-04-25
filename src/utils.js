@@ -21,7 +21,7 @@ export const getLinkFromFile = (link, type = 'file') => {
     case 'directory':
       return `${transformToKebab(link)}_files`;
     default:
-      return 'none';
+      return;
   }
 };
 
