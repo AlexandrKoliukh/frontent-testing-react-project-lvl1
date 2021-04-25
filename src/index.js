@@ -55,8 +55,9 @@ export const saveResources = (loadedUrl, outputPath, page) => {
     .then(() => {
       log(`Create folder ${resultOutput} for resources`);
       return relativeLinks.map((link) => {
-        const { protocol } = new URL(loadedUrl);
-        const resourceUrl = protocol + link;
+        console.log('loadedUrl', loadedUrl);
+        const { protocol, host } = new URL(loadedUrl);
+        const resourceUrl = protocol + host + link;
         console.log('resourceUrl', resourceUrl);
         return loadResource(resourceUrl, link, resultOutput);
       });

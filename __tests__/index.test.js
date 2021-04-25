@@ -10,7 +10,7 @@ const getFixturePath = (fileName) =>
   path.join(__dirname, '..', '__fixtures__', fileName);
 
 describe('load-page', () => {
-  const hostname = 'hexlet';
+  const hostname = 'hexlet.io';
   const pathname = '/courses';
   const testLink = `https://${path.join(hostname, pathname)}`;
 
