@@ -5,8 +5,9 @@ import nock from 'nock';
 import { getLinkFromFile } from '../src/utils';
 import savePage from '../src/index';
 
-const getFixturePath = (fileName) =>
-  path.join(__dirname, '..', '__fixtures__', fileName);
+const getFixturePath = (fileName) => {
+  return path.join(__dirname, '..', '__fixtures__', fileName);
+};
 
 describe('load-page', () => {
   const hostname = 'hexlet.io';
