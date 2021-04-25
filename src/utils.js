@@ -3,15 +3,15 @@ import path from 'path';
 const toKebab = (q) => q.replace(/^\//, '').replace(/[^a-z1-9]/g, '-');
 
 export const transformToKebab = (link) => {
-  if (isAbsoluteLink(link)) {
+  try {
     const { host = '', pathname } = new URL(link);
     return toKebab(host + pathname);
+  } catch {
+    return toKebab(link);
   }
-
-  return toKebab(link);
 };
 
-export const getNameFromLink = (link, type = 'file') => {
+export const getLinkFromFile = (link, type = 'file') => {
   const urlInKebabCase = transformToKebab(link);
 
   switch (type) {
@@ -29,13 +29,4 @@ export const getNameFromLink = (link, type = 'file') => {
 export const getHtmlFileName = (link) => {
   const urlInKebabCase = transformToKebab(link);
   return `${urlInKebabCase}.html`;
-};
-
-export const isAbsoluteLink = (link) => {
-  try {
-    new URL(link);
-    return true;
-  } catch {
-    return false;
-  }
 };

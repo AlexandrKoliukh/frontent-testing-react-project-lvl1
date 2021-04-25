@@ -2,9 +2,8 @@ import { promises as fs } from 'fs';
 import os from 'os';
 import path from 'path';
 import nock from 'nock';
-import { getNameFromLink } from '../src/utils';
+import { getLinkFromFile } from '../src/utils';
 import savePage from '../src';
-import parse from '../src/parser';
 
 const getFixturePath = (fileName) =>
   path.join(__dirname, '..', '__fixtures__', fileName);
@@ -59,25 +58,25 @@ describe('load-page', () => {
       .reply(200, responseBodyImg);
 
     await savePage(testLink, pathToTempDir);
-    const completedPath = path.join(pathToTempDir, getNameFromLink(testLink));
+    const completedPath = path.join(pathToTempDir, getLinkFromFile(testLink));
     const loadedData = await fs.readFile(completedPath, 'utf-8');
 
-    const resultDirName = getNameFromLink(testLink, 'directory');
+    const resultDirName = 'hexlet-io-courses_files';
 
     const completedPathToJs = path.join(
       pathToTempDir,
       resultDirName,
-      getNameFromLink('assets/application.js')
+      'hexlet-io-assets-application-js.js'
     );
     const completedPathToCss = path.join(
       pathToTempDir,
       resultDirName,
-      getNameFromLink('css/index.css')
+      'hexlet-io-css-index-css.css'
     );
     const completedPathToImg = path.join(
       pathToTempDir,
       resultDirName,
-      getNameFromLink('images/img.png')
+      'hexlet-io-images-img-png.png'
     );
     const loadedDataJs = await fs.readFile(completedPathToJs, 'utf-8');
     const loadedDataCss = await fs.readFile(completedPathToCss, 'utf-8');
@@ -116,14 +115,4 @@ describe('Exceptions', () => {
     ).rejects.toThrow();
     scope.done();
   });
-});
-
-test('parse', async () => {
-  const parsedData = await fs.readFile(getFixturePath('test.html'), 'utf-8');
-  const expectParsedData = [
-    'css/index.css',
-    'images/img.png',
-    'assets/application.js',
-  ];
-  expect(parse(parsedData)).toEqual(expectParsedData);
 });

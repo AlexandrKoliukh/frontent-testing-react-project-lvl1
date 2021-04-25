@@ -4,83 +4,84 @@ import { createWriteStream, promises as fs } from 'fs';
 import cheerio from 'cheerio';
 import debug from 'debug';
 import { keys } from 'lodash';
-import { getHtmlFileName, getNameFromLink, isAbsoluteLink } from './utils';
-import extractSourceLinks from './parser';
+import { getHtmlFileName, getLinkFromFile } from './utils';
 
-const log = debug('page-loader');
+const savePage = (baseUrl, outputPath, log = debug('page-loader')) => {
+  const { host, origin } = new URL(baseUrl);
 
-const tagsMapping = {
-  link: 'href',
-  img: 'src',
-  script: 'src',
-};
+  const tagsMapping = {
+    link: 'href',
+    img: 'src',
+    script: 'src',
+  };
 
-const changePageLinksToRelative = (page, dir) => {
-  const $ = cheerio.load(page);
-  keys(tagsMapping).forEach((tag) => {
-    $(tag).each((index, element) => {
-      const link = $(element).attr(tagsMapping[tag]);
-      if (!link || isAbsoluteLink(link)) return;
+  const changePageLinksToRelative = (page, dir) => {
+    const links = [];
 
-      $(element).attr(tagsMapping[tag], path.join(dir, getNameFromLink(link)));
-    });
-  });
-  return $.html();
-};
+    const $ = cheerio.load(page);
+    keys(tagsMapping).forEach((tag) => {
+      $(tag).each((index, element) => {
+        const uri = $(element).attr(tagsMapping[tag]);
 
-const loadResource = (loadedUrl, link, outputPath) => {
-  const resultFilePath = path.join(outputPath, getNameFromLink(link));
-  return axios({
-    method: 'get',
-    url: loadedUrl,
-    responseType: 'stream',
-  })
-    .then(({ data }) => {
-      log(`Fetch resource ${loadedUrl} to ${resultFilePath}`);
-      data.pipe(createWriteStream(resultFilePath));
-    })
-    .catch((error) => {
-      log(`Fetch resource ${loadedUrl} failed ${error.message}`);
-      throw error;
-    });
-};
+        const link = new URL(uri, origin);
+        if (link.host !== host) return;
 
-export const saveResources = (loadedUrl, outputPath, page) => {
-  const relativeLinks = extractSourceLinks(page);
-  console.log('Relative links: ', relativeLinks);
-  const resultDirName = getNameFromLink(loadedUrl, 'directory');
-  const resultOutput = path.join(outputPath, resultDirName);
-  return fs
-    .mkdir(resultOutput)
-    .then(() => {
-      log(`Create folder ${resultOutput} for resources`);
-      return relativeLinks.map((link) => {
-        console.log('loadedUrl', loadedUrl);
-        const { origin } = new URL(loadedUrl);
-        const resourceUrl = origin + link;
-        console.log('resourceUrl', resourceUrl);
-        return loadResource(resourceUrl, link, resultOutput);
+        links.push(link);
+        $(element).attr(
+          tagsMapping[tag],
+          path.join(dir, getLinkFromFile(link.toString()))
+        );
       });
-    })
-    .then((tasks) => Promise.all(tasks))
-    .catch((error) => {
-      log(`Create folder ${resultOutput} failed ${error.message}`);
-      throw error;
     });
-};
+    return { html: $.html(), links };
+  };
 
-const savePage = (loadedUrl, outputPath) => {
-  const sourceDir = getNameFromLink(loadedUrl, 'directory');
+  const loadResource = (loadedUrl, outputPath) => {
+    const resultFilePath = path.join(outputPath, getLinkFromFile(loadedUrl));
+    return axios({
+      method: 'get',
+      url: loadedUrl,
+      responseType: 'stream',
+    })
+      .then(({ data }) => {
+        log(`Fetch resource ${loadedUrl} to ${resultFilePath}`);
+        data.pipe(createWriteStream(resultFilePath));
+      })
+      .catch((error) => {
+        log(`Fetch resource ${loadedUrl} failed ${error.message}`);
+        throw error;
+      });
+  };
 
-  return axios.get(loadedUrl).then((res) => {
-    log(`Load page ${loadedUrl} to ${outputPath}`);
-    const resultFilePath = path.join(outputPath, getHtmlFileName(loadedUrl));
+  const saveResources = (loadedUrl, outputPath, links) => {
+    const resultDirName = getLinkFromFile(loadedUrl, 'directory');
+    const resultOutput = path.join(outputPath, resultDirName);
+    return fs
+      .mkdir(resultOutput)
+      .then(() => {
+        log(`Create folder ${resultOutput} for resources`);
+        return links.map((link) => {
+          const resourceUrl = new URL(link, loadedUrl);
+          return loadResource(resourceUrl.toString(), resultOutput);
+        });
+      })
+      .then((tasks) => Promise.all(tasks))
+      .catch((error) => {
+        log(`Create folder ${resultOutput} failed ${error.message}`);
+        throw error;
+      });
+  };
+
+  return axios.get(baseUrl).then((res) => {
+    log(`Load page ${baseUrl} to ${outputPath}`);
+    const resultFilePath = path.join(outputPath, getHtmlFileName(baseUrl));
     const page = res.data;
-    const newPage = changePageLinksToRelative(page, sourceDir);
+    const sourceDir = getLinkFromFile(baseUrl, 'directory');
+    const { html: newPage, links } = changePageLinksToRelative(page, sourceDir);
 
     return fs
       .writeFile(resultFilePath, newPage)
-      .then(() => saveResources(loadedUrl, outputPath, res.data))
+      .then(() => saveResources(baseUrl, outputPath, links))
       .catch((error) => {
         log(`Writing to ${resultFilePath} error, ${error.message}`);
         throw error;
