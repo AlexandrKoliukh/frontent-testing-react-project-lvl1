@@ -5,7 +5,7 @@ test('getNameFromLink', () => {
   expect(fileName1).toBe('example-com-temp-rocks.html');
   const fileName2 = getLinkFromFile(
     'https://ru.hexlet.io/courses',
-    'directory'
+    'directory',
   );
   expect(fileName2).toBe('ru-hexlet-io-courses_files');
   const fileName3 = getLinkFromFile('/assets/application.js');

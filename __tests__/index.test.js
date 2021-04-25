@@ -3,7 +3,7 @@ import os from 'os';
 import path from 'path';
 import nock from 'nock';
 import { getLinkFromFile } from '../src/utils';
-import savePage from '../src';
+import savePage from '../src/index';
 
 const getFixturePath = (fileName) =>
   path.join(__dirname, '..', '__fixtures__', fileName);
@@ -27,24 +27,24 @@ describe('load-page', () => {
   test('pageLoad save html', async () => {
     const responseBodyHtml = await fs.readFile(
       getFixturePath('test.html'),
-      'utf-8'
+      'utf-8',
     );
     const responseBodyJs = await fs.readFile(
       getFixturePath('assets/application.js'),
-      'utf-8'
+      'utf-8',
     );
     const responseBodyCss = await fs.readFile(
       getFixturePath('css/index.css'),
-      'utf-8'
+      'utf-8',
     );
     const responseBodyImg = await fs.readFile(
       getFixturePath('images/img.png'),
-      'utf-8'
+      'utf-8',
     );
 
     const expectDataHtml = await fs.readFile(
       getFixturePath('testWithChangedLinks.html'),
-      'utf-8'
+      'utf-8',
     );
 
     const scope = nock(/localhost|hexlet/)
@@ -66,17 +66,17 @@ describe('load-page', () => {
     const completedPathToJs = path.join(
       pathToTempDir,
       resultDirName,
-      'hexlet-io-assets-application.js'
+      'hexlet-io-assets-application.js',
     );
     const completedPathToCss = path.join(
       pathToTempDir,
       resultDirName,
-      'hexlet-io-css-index.css'
+      'hexlet-io-css-index.css',
     );
     const completedPathToImg = path.join(
       pathToTempDir,
       resultDirName,
-      'hexlet-io-images-img.png'
+      'hexlet-io-images-img.png',
     );
     const loadedDataJs = await fs.readFile(completedPathToJs, 'utf-8');
     const loadedDataCss = await fs.readFile(completedPathToCss, 'utf-8');
@@ -96,8 +96,9 @@ describe('Exceptions', () => {
     const scope = await nock(/localhost|hexlet/)
       .get(/wrongpath/)
       .reply(404);
+
     await expect(
-      savePage('https://hexlet.io/wrongpath', pathToTempDir)
+      savePage('https://hexlet.io/wrongpath', pathToTempDir),
     ).rejects.toThrow('Request failed with status code 404');
     scope.done();
   });
@@ -107,11 +108,12 @@ describe('Exceptions', () => {
     const scope = await nock(/localhost|hexlet/)
       .get(/courses/)
       .reply(200, '');
+
     await expect(
       savePage(
         'https://hexlet.io/courses',
-        `${pathToTempDir}/errorDirectoryName`
-      )
+        `${pathToTempDir}/errorDirectoryName`,
+      ),
     ).rejects.toThrow();
     scope.done();
   });

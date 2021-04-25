@@ -29,15 +29,18 @@ const savePage = (baseUrl, outputPath, log = debug('page-loader')) => {
         links.push(link);
         $(element).attr(
           tagsMapping[tag],
-          path.join(dir, getLinkFromFile(link.toString()))
+          path.join(dir, getLinkFromFile(link.toString())),
         );
       });
     });
     return { html: $.html(), links };
   };
 
-  const loadResource = (loadedUrl, outputPath) => {
-    const resultFilePath = path.join(outputPath, getLinkFromFile(loadedUrl));
+  const loadResource = (loadedUrl, resourceOutputPath) => {
+    const resultFilePath = path.join(
+      resourceOutputPath,
+      getLinkFromFile(loadedUrl),
+    );
     return axios({
       method: 'get',
       url: loadedUrl,
@@ -53,9 +56,9 @@ const savePage = (baseUrl, outputPath, log = debug('page-loader')) => {
       });
   };
 
-  const saveResources = (loadedUrl, outputPath, links) => {
+  const saveResources = (loadedUrl, resourceOutputPath, links) => {
     const resultDirName = getLinkFromFile(loadedUrl, 'directory');
-    const resultOutput = path.join(outputPath, resultDirName);
+    const resultOutput = path.join(resourceOutputPath, resultDirName);
     return fs
       .mkdir(resultOutput)
       .then(() => {

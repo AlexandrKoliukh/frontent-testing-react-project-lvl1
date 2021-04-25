@@ -6,7 +6,7 @@ export const transformToKebab = (link) => {
   try {
     const { host = '', pathname } = new URL(link);
     return toKebab(host + pathname);
-  } catch {
+  } catch (e) {
     return toKebab(link);
   }
 };
@@ -19,7 +19,7 @@ export const getLinkFromFile = (link, type = 'file') => {
       return transformToKebab(withoutExt) + ext;
     }
     case 'directory':
-      return transformToKebab(link) + '_files';
+      return `${transformToKebab(link)}_files`;
     default:
       return 'none';
   }
