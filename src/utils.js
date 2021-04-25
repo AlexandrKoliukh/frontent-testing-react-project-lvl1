@@ -11,7 +11,7 @@ export const transformToKebab = (link) => {
   }
 };
 
-export const getLinkFromFile = (link, type = 'file') => {
+export const makeLink = (link, type = 'file') => {
   switch (type) {
     case 'file': {
       const ext = path.extname(link) || '.html';
@@ -21,7 +21,7 @@ export const getLinkFromFile = (link, type = 'file') => {
     case 'directory':
       return `${transformToKebab(link)}_files`;
     default:
-      return;
+      throw new Error(`Unknown type: ${type}`);
   }
 };
 

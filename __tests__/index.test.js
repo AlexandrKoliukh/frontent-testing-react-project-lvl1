@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import os from 'os';
 import path from 'path';
 import nock from 'nock';
-import { getLinkFromFile } from '../src/utils';
+import { makeLink } from '../src/utils';
 import savePage from '../src/index';
 
 /* eslint-disable arrow-body-style */
@@ -60,7 +60,7 @@ describe('load-page', () => {
       .reply(200, responseBodyImg);
 
     await savePage(testLink, pathToTempDir);
-    const completedPath = path.join(pathToTempDir, getLinkFromFile(testLink));
+    const completedPath = path.join(pathToTempDir, makeLink(testLink));
     const loadedData = await fs.readFile(completedPath, 'utf-8');
 
     const resultDirName = 'hexlet-io-courses_files';

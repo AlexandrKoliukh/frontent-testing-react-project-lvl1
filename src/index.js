@@ -4,7 +4,7 @@ import { createWriteStream, promises as fs } from 'fs';
 import cheerio from 'cheerio';
 import debug from 'debug';
 import { keys } from 'lodash';
-import { getHtmlFileName, getLinkFromFile } from './utils';
+import { getHtmlFileName, makeLink } from './utils';
 
 const savePage = (baseUrl, outputPath, log = debug('page-loader')) => {
   const { host, origin } = new URL(baseUrl);
@@ -29,7 +29,7 @@ const savePage = (baseUrl, outputPath, log = debug('page-loader')) => {
         links.push(link);
         $(element).attr(
           tagsMapping[tag],
-          path.join(dir, getLinkFromFile(link.toString())),
+          path.join(dir, makeLink(link.toString())),
         );
       });
     });
@@ -37,10 +37,7 @@ const savePage = (baseUrl, outputPath, log = debug('page-loader')) => {
   };
 
   const loadResource = (loadedUrl, resourceOutputPath) => {
-    const resultFilePath = path.join(
-      resourceOutputPath,
-      getLinkFromFile(loadedUrl),
-    );
+    const resultFilePath = path.join(resourceOutputPath, makeLink(loadedUrl));
     return axios({
       method: 'get',
       url: loadedUrl,
@@ -57,7 +54,7 @@ const savePage = (baseUrl, outputPath, log = debug('page-loader')) => {
   };
 
   const saveResources = (loadedUrl, resourceOutputPath, links) => {
-    const resultDirName = getLinkFromFile(loadedUrl, 'directory');
+    const resultDirName = makeLink(loadedUrl, 'directory');
     const resultOutput = path.join(resourceOutputPath, resultDirName);
     return fs
       .mkdir(resultOutput)
@@ -79,7 +76,7 @@ const savePage = (baseUrl, outputPath, log = debug('page-loader')) => {
     log(`Load page ${baseUrl} to ${outputPath}`);
     const resultFilePath = path.join(outputPath, getHtmlFileName(baseUrl));
     const page = res.data;
-    const sourceDir = getLinkFromFile(baseUrl, 'directory');
+    const sourceDir = makeLink(baseUrl, 'directory');
     const { html: newPage, links } = changePageLinksToRelative(page, sourceDir);
 
     return fs
