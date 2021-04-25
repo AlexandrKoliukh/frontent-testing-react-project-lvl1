@@ -9,9 +9,9 @@ test('getNameFromLink', () => {
   );
   expect(fileName2).toBe('ru-hexlet-io-courses_files');
   const fileName3 = getLinkFromFile('/assets/application.js');
-  expect(fileName3).toBe('assets-application-js.js');
+  expect(fileName3).toBe('assets-application.js');
   const fileName4 = getLinkFromFile('/assets/application.css');
-  expect(fileName4).toBe('assets-application-css.css');
+  expect(fileName4).toBe('assets-application.css');
   const fileName5 = getLinkFromFile('images/img2.jpg');
-  expect(fileName5).toBe('images-img2-jpg.jpg');
+  expect(fileName5).toBe('images-img2.jpg');
 });

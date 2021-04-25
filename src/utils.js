@@ -12,15 +12,14 @@ export const transformToKebab = (link) => {
 };
 
 export const getLinkFromFile = (link, type = 'file') => {
-  const urlInKebabCase = transformToKebab(link);
-
   switch (type) {
     case 'file': {
       const ext = path.extname(link) || '.html';
-      return `${urlInKebabCase}${ext}`;
+      const withoutExt = link.replace(ext, '');
+      return transformToKebab(withoutExt) + ext;
     }
     case 'directory':
-      return `${urlInKebabCase}_files`;
+      return transformToKebab(link) + '_files';
     default:
       return 'none';
   }

@@ -66,17 +66,17 @@ describe('load-page', () => {
     const completedPathToJs = path.join(
       pathToTempDir,
       resultDirName,
-      'hexlet-io-assets-application-js.js'
+      'hexlet-io-assets-application.js'
     );
     const completedPathToCss = path.join(
       pathToTempDir,
       resultDirName,
-      'hexlet-io-css-index-css.css'
+      'hexlet-io-css-index.css'
     );
     const completedPathToImg = path.join(
       pathToTempDir,
       resultDirName,
-      'hexlet-io-images-img-png.png'
+      'hexlet-io-images-img.png'
     );
     const loadedDataJs = await fs.readFile(completedPathToJs, 'utf-8');
     const loadedDataCss = await fs.readFile(completedPathToCss, 'utf-8');
