@@ -1,5 +1,7 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/AlexandrKoliukh/frontent-testing-react-project-lvl1/workflows/hexlet-check/badge.svg)](https://github.com/AlexandrKoliukh/frontent-testing-react-project-lvl1/actions)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a5f36f478f8e3dc208bf/maintainability)](https://codeclimate.com/github/AlexandrKoliukh/frontent-testing-react-project-lvl1/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a5f36f478f8e3dc208bf/test_coverage)](https://codeclimate.com/github/AlexandrKoliukh/frontent-testing-react-project-lvl1/test_coverage)
 
 ## Usage
 
@@ -10,10 +12,4 @@
       -o, --output [path]  Output path
       -h, --help           output usage information
 
-[![asciicast](https://asciinema.org/a/OC8E4iFmXvApSxnBEamyHARU3.svg)](https://asciinema.org/a/OC8E4iFmXvApSxnBEamyHARU3)
-
-## Debug
-
-    DEBUG=page-loader page-loader https://yandex.ru
-
-[![asciicast](https://asciinema.org/a/1gnXTH8UvpJeSUJewYDheoefB.svg)](https://asciinema.org/a/1gnXTH8UvpJeSUJewYDheoefB)
+[![asciicast](https://asciinema.org/a/ntObOQQxvthmMzuu0nn1q9SX2.svg)](https://asciinema.org/a/ntObOQQxvthmMzuu0nn1q9SX2)
