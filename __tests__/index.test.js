@@ -5,6 +5,7 @@ import nock from 'nock';
 import { getLinkFromFile } from '../src/utils';
 import savePage from '../src/index';
 
+/* eslint-disable arrow-body-style */
 const getFixturePath = (fileName) => {
   return path.join(__dirname, '..', '__fixtures__', fileName);
 };

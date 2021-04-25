@@ -1,6 +1,5 @@
-var a = 123;
-var b = 123;
+/* eslint-disable */
 
-function c() {
-  return 123;
-}
+document.addEventListener('DOMContentLoaded', () => {
+  alert('hello');
+});
