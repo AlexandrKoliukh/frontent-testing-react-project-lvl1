@@ -2,6 +2,7 @@
 [![Actions Status](https://github.com/AlexandrKoliukh/frontent-testing-react-project-lvl1/workflows/hexlet-check/badge.svg)](https://github.com/AlexandrKoliukh/frontent-testing-react-project-lvl1/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a5f36f478f8e3dc208bf/maintainability)](https://codeclimate.com/github/AlexandrKoliukh/frontent-testing-react-project-lvl1/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/a5f36f478f8e3dc208bf/test_coverage)](https://codeclimate.com/github/AlexandrKoliukh/frontent-testing-react-project-lvl1/test_coverage)
+[![codecov](https://codecov.io/gh/AlexandrKoliukh/frontent-testing-react-project-lvl1/branch/main/graph/badge.svg?token=5P4AGVTTAF)](https://codecov.io/gh/AlexandrKoliukh/frontent-testing-react-project-lvl1)
 
 ## Usage
 
